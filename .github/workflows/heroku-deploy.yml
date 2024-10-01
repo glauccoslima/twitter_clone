@@ -1,0 +1,67 @@
+name: Push Container to Heroku
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  heroku-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Etapa 1: Fazer o checkout do repositório (versão atualizada para v3)
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # Etapa de verificação para garantir que estamos no repositório correto
+      - name: Verificar diretório
+        run: |
+          pwd
+          ls -la
+
+      # Etapa 2: Deploy para o Heroku usando a ação akhileshns/heroku-deploy
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+
+      # Substituição do set-output (atualizado para usar GITHUB_OUTPUT)
+      - name: Save Heroku app URL
+        run: echo "app_url=https://$HEROKU_APP_NAME.herokuapp.com" >> $GITHUB_OUTPUT
+
+  custom-deploy:
+    needs: heroku-deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Etapa 1: Fazer o checkout do repositório com profundidade total (versão atualizada para v3)
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Etapa 2: Configurar credenciais de login para o Heroku
+      - name: Heroku login credentials
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+
+      # Etapa 3: Adicionar o repositório remoto do Heroku
+      - name: Add Heroku remote
+        run: heroku git:remote --app $HEROKU_APP_NAME
+        env:
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+
+      # Etapa 4: Fazer push para o Heroku
+      - name: Push to Heroku
+        run: git push heroku main:main

@@ -1,0 +1,72 @@
+# Ambiente virtual
+venv/
+env/
+
+# Compilados Python
+*.py[cod]
+__pycache__/
+*.so
+*.pyc
+
+# Logs e arquivos temporários do sistema
+*.log
+*.pot
+*.py~
+*.swp
+*.swo
+*.pid
+*.gz
+
+# Arquivos de cache
+*.cache
+*.coverage
+.cache/
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Arquivos de banco de dados locais
+*.sqlite3
+*.db
+db.sqlite3
+
+# Arquivos de backup do editor
+*~
+
+# Logs do Django
+*.log
+
+# Arquivos estáticos e mídia gerados
+staticfiles/
+media/
+
+# Arquivos de configurações de IDEs
+.idea/
+.vscode/
+
+# Ferramentas de build
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# Arquivos de lock do Poetry ou Pipenv, se não forem controlados pelo versionamento
+Pipfile.lock
+
+# Arquivos específicos de sistemas operacionais
+.DS_Store
+Thumbs.db
+
+# Arquivos relacionados ao docker (se aplicável)
+docker-compose.override.yml
+
+# Arquivos relacionados a containers
+*.dockerignore
+
+# Arquivos temporários relacionados ao git
+.git/
+
+# Excluir o arquivo gerar_log.py do versionamento do git
+gerar_log.py

@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Define a codificação de caracteres como UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Define a viewport para responsividade -->
+    <title>O que está acontecendo?</title>
+    <!-- Título da página -->
+
+    <!-- Link para o CSS do Bootstrap 4.4.1 -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <!-- Link para as fontes do Google -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Asap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+
+    <!-- Link para o CSS do Font Awesome -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Link para o CSS personalizado -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+
+    <!-- Favicon da página -->
+    <link
+      rel="shortcut icon"
+      href="https://raw.githubusercontent.com/devicons/devicon/ca28c779441053191ff11710fe24a9e6c23690d6/icons/twitter/twitter-original.svg"
+      type="image/x-icon"
+    />
+
+    <!-- Estilos adicionais para os botões -->
+    <style>
+      /* Estilos básicos para os botões */
+      .navbar .btn-custom {
+        color: white;
+        margin: 0 5px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+      }
+
+      /* Estados de hover, focus e active */
+      .navbar .btn-custom:hover,
+      .navbar .btn-custom:focus {
+        background-color: #0d8ae5;
+        outline: none;
+        text-decoration: none;
+      }
+
+      .navbar .btn-custom:active {
+        background-color: #0b7ac2;
+      }
+
+      /* Acessibilidade */
+      .navbar .btn-custom:focus {
+        box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.5);
+      }
+
+      /* Responsividade para dispositivos móveis */
+      @media (max-width: 767px) {
+        .navbar .btn-custom {
+          margin: 5px 0;
+        }
+
+        .navbar .navbar-nav {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-fluid" style="padding: 0">
+      <!-- Navbar -->
+      <nav
+        class="navbar navbar-expand-lg navbar-light"
+        style="background-color: #1da1f2"
+      >
+        <a class="navbar-brand" style="color: white" href="#">
+          <!-- Logo do Twitter -->
+          <img
+            src="https://raw.githubusercontent.com/devicons/devicon/ca28c779441053191ff11710fe24a9e6c23690d6/icons/twitter/twitter-original.svg"
+            width="30"
+            height="30"
+            class="d-inline-block align-top"
+            alt="Twitter Logo"
+          />
+          Twitter Clone
+        </a>
+
+        <!-- Botão para colapsar a navbar em telas menores -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Alternar navegação"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Conteúdo da navbar -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <!-- Botão Início -->
+            <li class="nav-item">
+              <a
+                href="{% url 'home' %}"
+                class="btn btn-custom"
+                role="button"
+                aria-label="Início"
+              >
+                Início
+              </a>
+            </li>
+
+            <!-- Botão Editar -->
+            <li class="nav-item">
+              <a
+                href="{% url 'editar' %}"
+                class="btn btn-custom"
+                role="button"
+                aria-label="Editar Perfil"
+              >
+                Editar
+              </a>
+            </li>
+
+            <!-- Botão Sair -->
+            <li class="nav-item">
+              <form
+                id="logout-form"
+                method="POST"
+                action="{% url 'logout' %}"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom" aria-label="Sair">
+                  Sair
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    {% block content %}
+    <div id="main" class="container-fluid d-flex">
+      <!-- Sidebar -->
+      <div class="sidebar m-5 d-none d-md-block">
+        <!-- Seu conteúdo da barra lateral aqui -->
+      </div>
+      <!-- End Sidebar -->
+
+      <!-- Content -->
+      <div class="content flex-grow-1">
+        <!-- Seu conteúdo principal aqui -->
+      </div>
+      <!-- End Content -->
+    </div>
+    {% endblock content %}
+
+    <!-- Scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

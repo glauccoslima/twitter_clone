@@ -1,0 +1,325 @@
+{% extends 'twitter/layout.html' %}
+<!-- Extende o layout base do projeto -->
+
+{% block content %}
+
+<!-- Inclusão dos ícones do Bootstrap -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+/>
+
+<!-- CSS customizado para melhorias no formulário -->
+<style>
+  /* Estilo para o campo de formulário quando focado */
+  .form-control:focus {
+    border-color: #1da1f2; /* Cor azul do Twitter */
+    box-shadow: 0 0 5px rgba(29, 161, 242, 0.8); /* Efeito de brilho */
+    outline: none; /* Remove o contorno padrão */
+  }
+
+  /* Estilo para o botão personalizado do Twitter */
+  .twitter-btn {
+    border-radius: 25px;
+    background-color: #1da1f2;
+    color: white;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  /* Estilo para o botão ao passar o mouse */
+  .twitter-btn:hover {
+    background-color: #0c85d0;
+  }
+
+  /* Estilo para o card */
+  .card {
+    border-radius: 15px;
+  }
+
+  /* Estilo para a página de edição de perfil */
+  .edit-profile-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Estilo para o contêiner do avatar */
+  .avatar-wrapper {
+    position: relative;
+    width: 120px; /* Aumenta o tamanho do avatar */
+    height: 120px;
+    cursor: pointer;
+  }
+
+  /* Estilo para a imagem do avatar */
+  .avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  /* Estilo para o hover do avatar */
+  .avatar-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Exibe o hover do avatar ao passar o mouse */
+  .avatar-wrapper:hover .avatar-hover {
+    opacity: 1;
+  }
+
+  /* Estilo para o ícone dentro do hover do avatar */
+  .avatar-hover i {
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  /* Estilo para o texto do grupo de entrada */
+  .input-group-text {
+    cursor: pointer;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Estilo para o campo de entrada dentro do grupo de entrada */
+  .input-group .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* Estilo para o spinner de carregamento */
+  .spinner-border {
+    display: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-width: 2px;
+    margin-left: 10px;
+  }
+
+  /* Exibe o spinner de carregamento quando o botão está carregando */
+  .loading .spinner-border {
+    display: inline-block;
+  }
+
+  /* Estilo para o campo de formulário não editável */
+  .form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+  }
+</style>
+
+<!-- Conteúdo da página de edição de perfil -->
+<div class="edit-profile-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm p-4">
+          <!-- Cabeçalho da página -->
+          <header class="text-center mb-4">
+            <h1 class="h5">Editar Perfil</h1>
+          </header>
+
+          <!-- Imagem de perfil do usuário -->
+          <div class="d-flex justify-content-center mb-4">
+            <div
+              class="avatar-wrapper"
+              onclick="document.getElementById('id_image').click();"
+            >
+              <img
+                src="{{ request.user.profile.image.url }}"
+                alt="Avatar do usuário"
+                class="avatar"
+                id="avatarPreview"
+              />
+              <!-- Ícone de câmera que aparece ao passar o mouse -->
+              <div class="avatar-hover">
+                <i class="bi bi-camera"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulário de edição de perfil -->
+          <form
+            class="needs-validation"
+            method="post"
+            enctype="multipart/form-data"
+            novalidate
+          >
+            {% csrf_token %}
+
+            <!-- Campo para o nome do usuário -->
+            <div class="mb-3">
+              <label for="id_first_name" class="form-label">Nome</label>
+              <div class="input-group has-validation">
+                <span
+                  class="input-group-text"
+                  onclick="document.getElementById('id_first_name').focus();"
+                >
+                  <i class="bi bi-person-fill"></i>
+                </span>
+                <input
+                  id="id_first_name"
+                  name="first_name"
+                  type="text"
+                  class="form-control {% if u_form.first_name.errors %}is-invalid{% endif %}"
+                  required
+                  value="{{ u_form.data.first_name|default:u_form.initial.first_name }}"
+                />
+              </div>
+              {% if u_form.first_name.errors %}
+              <div class="invalid-feedback d-block">
+                {{ u_form.first_name.errors.as_text }}
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Campo para o nome de usuário (não editável) -->
+            <div class="mb-3">
+              <label for="id_username" class="form-label">Username</label>
+              <div class="input-group has-validation">
+                <span class="input-group-text">
+                  <i class="bi bi-person"></i>
+                </span>
+                <input
+                  id="id_username"
+                  name="username"
+                  type="text"
+                  class="form-control"
+                  value="{{ u_form.initial.username }}"
+                  readonly
+                  tabindex="-1"
+                />
+              </div>
+            </div>
+
+            <!-- Campo para a bio do usuário -->
+            <div class="mb-3">
+              <label for="id_bio" class="form-label">Bio</label>
+              <div class="input-group has-validation">
+                <span
+                  class="input-group-text"
+                  onclick="document.getElementById('id_bio').focus();"
+                >
+                  <i class="bi bi-chat-text"></i>
+                </span>
+                <input
+                  id="id_bio"
+                  name="bio"
+                  type="text"
+                  class="form-control {% if p_form.bio.errors %}is-invalid{% endif %}"
+                  required
+                  value="{{ p_form.data.bio|default:p_form.initial.bio }}"
+                />
+              </div>
+              {% if p_form.bio.errors %}
+              <div class="invalid-feedback d-block">
+                {{ p_form.bio.errors.as_text }}
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Campo para a imagem de perfil (oculto) -->
+            <div class="mb-3" style="display: none">
+              <label for="id_image" class="form-label">Imagem de Perfil</label>
+              <div class="input-group has-validation">
+                <input
+                  id="id_image"
+                  name="image"
+                  type="file"
+                  class="form-control"
+                />
+              </div>
+              {% if p_form.image.errors %}
+              <div class="invalid-feedback d-block">
+                {{ p_form.image.errors.as_text }}
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Botão para enviar o formulário -->
+            <div class="d-grid">
+              <button type="submit" class="btn twitter-btn" id="submitBtn">
+                Atualizar
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
+          </form>
+          <!-- Fim do formulário de edição de perfil -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script para ativar a validação de formulário no Bootstrap e animação de carregamento -->
+<script>
+  (function () {
+    "use strict";
+
+    // Seleciona todos os formulários que precisam de validação
+    var forms = document.querySelectorAll(".needs-validation");
+
+    // Adiciona evento de escuta para cada formulário
+    Array.prototype.slice.call(forms).forEach(function (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          // Impede o envio do formulário se não for válido
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            // Exibe o ícone de carregamento e desabilita o botão
+            var submitBtn = document.getElementById("submitBtn");
+            submitBtn.classList.add("loading");
+            submitBtn.disabled = true;
+          }
+
+          // Adiciona a classe de validação ao formulário
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+
+  // Script para pré-visualização da imagem selecionada
+  document
+    .getElementById("id_image")
+    .addEventListener("change", function (event) {
+      var input = event.target;
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var avatar = document.getElementById("avatarPreview");
+          avatar.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    });
+</script>
+
+{% endblock content %}

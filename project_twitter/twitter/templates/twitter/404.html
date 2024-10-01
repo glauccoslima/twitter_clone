@@ -1,0 +1,56 @@
+<!-- twitter/templates/twitter/404.html -->
+
+{% extends 'twitter/layout.html' %} {% load static %}
+<!-- Extende o layout base do projeto -->
+
+{% block content %}
+<div class="container text-center mt-5">
+  <!-- Imagem ilustrativa -->
+  <img
+    src="{% static 'images/404.svg' %}"
+    alt="Página Não Encontrada"
+    class="img-fluid"
+    style="max-width: 400px; width: 100%"
+  />
+
+  <!-- Título da página de erro 404 -->
+  <h1 class="mt-4" style="font-size: 2.5rem; font-weight: bold">
+    Ops! Página Não Encontrada
+  </h1>
+
+  <!-- Mensagem de erro informando que a página não foi encontrada -->
+  <p class="mt-3" style="font-size: 1.2rem">
+    Desculpe, a página que você está procurando não existe ou foi removida.
+  </p>
+
+  <!-- Botão para redirecionar o usuário de volta para a página inicial -->
+  <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-4"
+    >Voltar para o Início</a
+  >
+</div>
+
+<!-- Estilos adicionais para melhorar o design -->
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  h1 {
+    color: #343a40;
+  }
+
+  p {
+    color: #6c757d;
+  }
+
+  .btn-primary {
+    background-color: #1da1f2;
+    border-color: #1da1f2;
+  }
+
+  .btn-primary:hover {
+    background-color: #0d8bf2;
+    border-color: #0d8bf2;
+  }
+</style>
+{% endblock content %}

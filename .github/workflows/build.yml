@@ -1,0 +1,57 @@
+# Nome do workflow para aplicação Python
+name: Python application
+
+# Evento que dispara o workflow: push
+on: [push]
+
+jobs:
+  # Job de build
+  build:
+    # Estratégia de build
+    strategy:
+      fail-fast: false # Não falha imediatamente em caso de erro
+      matrix:
+        python-version: [3.11] # Versão do Python a ser usada
+
+    # Ambiente onde o job será executado
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo para fazer checkout do código do repositório
+      - uses: actions/checkout@v2 # Ação para fazer checkout do repositório
+
+      # Configura a versão do Python especificada
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2 # Ação para configurar o Python
+        with:
+          python-version: ${{ matrix.python-version }} # Versão do Python a ser usada
+
+      # Cache das dependências do Poetry para acelerar builds futuros
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v2 # Ação para cache de dependências
+        with:
+          path: ~/.cache/pypoetry/cache # Caminho do cache do Poetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }} # Chave do cache
+          restore-keys: |
+            ${{ runner.os }}-poetry-  # Chaves de restauração
+
+      # Instala o Poetry
+      - name: Install poetry
+        run: |
+          python -m ensurepip  # Garante que o pip está instalado
+          python -m pip install --upgrade pip  # Atualiza o pip
+          python -m pip install --upgrade poetry  # Instala o Poetry
+
+      # Verifica se o Poetry foi instalado corretamente
+      - name: View poetry --help
+        run: poetry --help # Exibe a ajuda do Poetry para verificar a instalação
+
+      # Instala as dependências do projeto usando Poetry
+      - name: Install dependencies
+        shell: bash
+        run: python -m poetry install # Instala as dependências do projeto
+
+      # Executa os testes do projeto
+      - name: Test
+        run: |
+          poetry run python manage.py test  # Executa os testes do Django

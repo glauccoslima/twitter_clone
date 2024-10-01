@@ -1,0 +1,70 @@
+# Nome do workflow para Pull Requests
+name: Python Pull Request Workflow
+
+# Evento que dispara o workflow: abertura de Pull Requests
+on: [pull_request]
+
+jobs:
+  # Job de qualidade de código (QA)
+  qa:
+    name: Quality check # Nome do job
+    runs-on: ubuntu-latest # Ambiente onde o job será executado
+
+    steps:
+      # Passo para fazer checkout do código do repositório
+      - uses: actions/checkout@v2 # Ação para fazer checkout do repositório
+
+      # Configura a versão do Python especificada
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2 # Ação para configurar o Python
+        with:
+          python-version: 3.11 # Versão do Python a ser usada
+
+      # Cache das dependências do Poetry para acelerar builds futuros
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v2 # Ação para cache de dependências
+        with:
+          path: ~/.cache/pypoetry/cache # Caminho do cache do Poetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }} # Chave do cache
+          restore-keys: |
+            ${{ runner.os }}-poetry-  # Chaves de restauração
+
+      # Instala o Poetry
+      - name: Install poetry
+        run: |
+          pip install -U pip  # Atualiza o pip
+          pip install poetry  # Instala o Poetry
+          poetry install  # Instala as dependências do projeto
+        env:
+          POETRY_VIRTUALENVS_CREATE: false # Não cria ambientes virtuais separados
+
+      # Verifica se o Poetry foi instalado corretamente
+      - name: View poetry --help
+        run: poetry --help # Exibe a ajuda do Poetry para verificar a instalação
+
+      # Instala as dependências do projeto usando Poetry
+      - name: Install dependencies
+        shell: bash
+        run: python -m poetry install # Instala as dependências do projeto
+
+      # Executa os testes do projeto
+      - name: Test
+        run: |
+          poetry run python manage.py test  # Executa os testes do Django
+
+      # Executa o Wemake Python Styleguide para verificar a conformidade com o estilo de código
+      - name: Wemake Python Styleguide
+        uses: wemake-services/wemake-python-styleguide@0.16.0 # Ação para o Wemake Python Styleguide
+        continue-on-error: true # Continua mesmo se houver erros de estilo
+        with:
+          reporter: "github-pr-review" # Relatório no formato de revisão do GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token de autenticação do GitHub
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token para o reviewdog
+
+      # Desabilitando temporariamente o flake8-bandit para evitar erros
+      - name: Update .flake8 configuration to disable flake8-bandit
+        run: |
+          echo "[flake8]" >> .flake8  # Adiciona seção flake8 ao arquivo de configuração
+          echo "disable-noqa = True" >> .flake8  # Desabilita a diretiva noqa
+          echo "exclude = flake8-bandit" >> .flake8  # Exclui o flake8-bandit

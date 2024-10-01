@@ -1,0 +1,20 @@
+{% extends 'twitter/base.html' %}
+<!-- Extende o layout base do projeto -->
+
+{% block content %}
+<div class="container">
+  <h2>Adicionar Comentário</h2>
+  <!-- Título da página de adição de comentário -->
+
+  <!-- Formulário para adicionar um novo comentário -->
+  <form method="POST">
+    {% csrf_token %}
+    <!-- Token CSRF para proteção contra ataques CSRF -->
+    {{ form.as_p }}
+    <!-- Renderiza o formulário como parágrafos -->
+
+    <!-- Botão para enviar o formulário -->
+    <button type="submit" class="btn btn-primary">Comentar</button>
+  </form>
+</div>
+{% endblock %}
