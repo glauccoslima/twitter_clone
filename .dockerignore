@@ -38,10 +38,6 @@ db.sqlite3
 # Logs do Django
 *.log
 
-# Arquivos estáticos e mídia gerados
-staticfiles/
-media/
-
 # Arquivos de configurações de IDEs
 .idea/
 .vscode/
