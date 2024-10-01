@@ -7,8 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança e chave secreta
 SECRET_KEY = "django-insecure-6=w3+g1o@=@rk$uxak18sr%ic#cqr^ld3a*)0+@zbv2!rrn167"  # Chave secreta para criptografia e segurança
 # skipcq: PY-S0900
+
 DEBUG = True  # Define se o modo de depuração está ativado
-ALLOWED_HOSTS = ['127.0.0.1', 'ebac-bookstore-api-glaucco.herokuapp.com', '.herokuapp.com']  # Hosts permitidos para acessar o projeto
+# Define os hosts permitidos para a aplicação
+
+ALLOWED_HOSTS = ['127.0.0.1', 'twitter-clone-api.herokuapp.com', '.herokuapp.com'] # Lista de hosts permitidos para a aplicação Django
+CSRF_TRUSTED_ORIGINS = ['https://twitter-clone-api.herokuapp.com', 'https://twitter-clone-api-6ddd12cb8d81.herokuapp.com/'] # Lista de origens confiáveis para o CSRF
 
 # Aplicações instaladas
 INSTALLED_APPS = [
