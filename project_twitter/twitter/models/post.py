@@ -26,7 +26,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_posts', through="Like", blank=True)
 
     class Meta:
-        # Define a ordenação padrão dos posts por timestamp em ordem decrescente
+        # Define a ordenação padrão dos posts por timestamp em ordem decrescente (do mais recente para o mais antigo)
         ordering = ["-timestamp"]
 
     # Método para retornar o total de curtidas de um post
