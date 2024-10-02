@@ -19,7 +19,7 @@ class UserRegisterForm(UserCreationForm):
             raise forms.ValidationError("Email já está em uso.")  # Lança um erro de validação se o email já estiver em uso
         return email  # Retorna o email validado
 
-# Formulário para criar um post
+# Formulário para criar um post (tweet)
 class PostForm(forms.ModelForm):
     content = forms.CharField(
         widget=forms.Textarea(
