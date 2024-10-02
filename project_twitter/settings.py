@@ -73,7 +73,7 @@ DATABASES = {
     "default": dj_database_url.config(default=os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"))
 }
 
-# Validação de senha do usuário
+# Validação de senha do usuário para segurança
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -89,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internacionalização
+# Internacionalização e configurações de fuso horário padrão para o projeto Django Twitter
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "UTC"
 USE_I18N = True
