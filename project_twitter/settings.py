@@ -16,7 +16,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'twitter-clone-api.herokuapp.com', '.herokuapp.com']  # Lista de hosts permitidos
 
 # Lista de origens confiáveis para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://twitter-clone-api.herokuapp.com', 'https://twitter-clone-api-6ddd12cb8d81.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://twitter-clone-api.herokuapp.com', 'https://twitter-clone-api-42ae09139a6e.herokuapp.com']
 
 # Aplicações instaladas
 INSTALLED_APPS = [
