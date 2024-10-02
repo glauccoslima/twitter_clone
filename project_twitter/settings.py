@@ -70,7 +70,14 @@ WSGI_APPLICATION = "project_twitter.wsgi.application"
 
 # Configuração do banco de dados usando dj-database-url para Heroku e SQLite como fallback local
 DATABASES = {
-    "default": dj_database_url.config(default=os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"))
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),  # Engine do banco de dados
+        "NAME": str(os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3")),  # Nome do banco de dados convertido em string
+        "USER": os.environ.get("SQL_USER", "user"),  # Usuário do banco de dados
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),  # Senha do banco de dados
+        "HOST": os.environ.get("SQL_HOST", "localhost"),  # Host do banco de dados
+        "PORT": os.environ.get("SQL_PORT", "5432"),  # Porta do banco de dados
+    }
 }
 
 # Validação de senha do usuário para segurança
