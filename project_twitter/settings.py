@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-6=w3+g1o@=@rk$uxak18sr%ic#
 # skipcq: PY-S0900
 
 # Definir DEBUG com base na variável de ambiente (padrão: False) para segurança
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Defina os hosts permitidos para a aplicação
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'twitter-clone-api.herokuapp.com', '.herokuapp.com']  # Lista de hosts permitidos

@@ -13,7 +13,7 @@
 
 O **Twitter Clone** é uma aplicação web que simula as principais funcionalidades do Twitter, permitindo que os usuários criem perfis, postem tweets, curtam e comentem em posts. O objetivo é proporcionar uma experiência semelhante ao Twitter, explorando os recursos do Django e outras tecnologias web.
 
-🌐 [**Visite o site!**](https://twitter-clone-api-6ddd12cb8d81.herokuapp.com/) 👈
+🌐 [**Visite o site!**](https://twitter-clone-api-42ae09139a6e.herokuapp.com/) 👈
 
 ## Funcionalidades
 
