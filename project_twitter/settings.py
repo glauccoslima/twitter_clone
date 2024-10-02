@@ -73,7 +73,7 @@ DATABASES = {
     "default": dj_database_url.config(default=os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}"))
 }
 
-# Validação de senha
+# Validação de senha do usuário
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
