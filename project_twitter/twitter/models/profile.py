@@ -60,5 +60,5 @@ class Profile(models.Model):
         # Gera o hash MD5 do email do usuário em letras minúsculas
         # skipcq: PTC-W1003
         email_hash = hashlib.md5(self.user.email.lower().encode('utf-8')).hexdigest()
-        # Retorna a URL do Gravatar com o hash gerado
+        # Retorna a URL do Gravatar com o hash gerado e o tamanho da imagem
         return f"https://www.gravatar.com/avatar/{email_hash}?d=identicon&s=150"
