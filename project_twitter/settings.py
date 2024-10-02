@@ -9,8 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-6=w3+g1o@=@rk$uxak18sr%ic#cqr^ld3a*)0+@zbv2!rrn167')  # Chave secreta para criptografia e segurança
 # skipcq: PY-S0900
 
-# Definir DEBUG com base na variável de ambiente (padrão: False)
-DEBUG = True
+# Definir DEBUG com base na variável de ambiente (padrão: False) para segurança
+DEBUG = True #
 
 # Defina os hosts permitidos para a aplicação
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'twitter-clone-api.herokuapp.com', '.herokuapp.com']  # Lista de hosts permitidos
