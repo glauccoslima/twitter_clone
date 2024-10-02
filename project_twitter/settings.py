@@ -65,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-# Configuração da aplicação WSGI
+# Configuração da aplicação WSGI para uso com Gunicorn
 WSGI_APPLICATION = "project_twitter.wsgi.application"
 
 # Configuração do banco de dados usando dj-database-url para Heroku e SQLite como fallback local
