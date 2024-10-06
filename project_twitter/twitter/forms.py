@@ -4,22 +4,59 @@ from django import forms  # Importa o módulo forms do Django para criar formul�
 from django.contrib.auth.forms import UserCreationForm  # Importa o formulário de criação de usuário padrão do Django
 from django.contrib.auth.models import User  # Importa o modelo de usuário padrão do Django
 from .models import Post, Profile, Comment  # Importa os modelos Post, Profile e Comment
+import re  # Importa o módulo regex para validação de senha
 
 # Formulário de registro de usuário
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()  # Campo de email adicional
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        help_text='Obrigatório. Insira seu nome.'
+    )
+    email = forms.EmailField(
+        max_length=254,
+        required=True,
+        help_text='Obrigatório. Insira um email válido.'
+    )
 
     class Meta:
         model = User  # Define o modelo associado ao formulário
         fields = ["first_name", "username", "email", "password1", "password2"]  # Campos que serão exibidos no formulário
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')  # Obtém o email do formulário
-        if User.objects.filter(email=email).exists():  # Verifica se o email já está em uso
-            raise forms.ValidationError("Email já está em uso.")  # Lança um erro de validação se o email já estiver em uso
-        return email  # Retorna o email validado
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+        return username
 
-# Formulário para criar um post (tweet)
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Este email já está cadastrado.")
+        return email
+
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        # Verifica o comprimento da senha
+        if len(password) < 8 or len(password) > 30:
+            raise forms.ValidationError('A senha deve ter entre 8 a 30 caracteres.')
+        # Verifica a complexidade da senha
+        if not re.search(r'[A-Za-z]', password):
+            raise forms.ValidationError('A senha deve conter pelo menos uma letra.')
+        if not re.search(r'\d', password):
+            raise forms.ValidationError('A senha deve conter pelo menos um número.')
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            raise forms.ValidationError('A senha deve conter pelo menos um caractere especial.')
+        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', 'As senhas não coincidem.')
+
+# Formulário para criar um post
 class PostForm(forms.ModelForm):
     content = forms.CharField(
         widget=forms.Textarea(
@@ -42,13 +79,20 @@ class UserUpdateForm(forms.ModelForm):
         model = User  # Define o modelo associado ao formulário
         fields = ["first_name", "username"]  # Campos que serão exibidos no formulário
 
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        # Exclui o usuário atual da verificação para permitir que ele mantenha seu nome de usuário
+        if User.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+        return username
+
 # Formulário para atualizar o perfil
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile  # Define o modelo associado ao formulário
         fields = ["image", "bio"]  # Campos que serão exibidos no formulário
 
-# Novo formulário para adicionar um comentário
+# Formulário para adicionar um comentário
 class CommentForm(forms.ModelForm):
     content = forms.CharField(
         widget=forms.Textarea(

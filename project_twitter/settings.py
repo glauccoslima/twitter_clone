@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "rest_framework",  # Framework para construção de APIs RESTful
     "rest_framework.authtoken",  # Autenticação baseada em token para APIs REST
     "django.contrib.humanize",  # Aplicação para formatação de dados humanizada
+    'widget_tweaks',
 ]
 
 # Middleware
@@ -131,8 +132,8 @@ if DEBUG:
     ]
 
 # Configurações de login e logout do Django
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login'
+LOGIN_REDIRECT_URL = '/twitter/'  # Redireciona para a página inicial após login
+LOGOUT_REDIRECT_URL = '/login/'  # Redireciona para a página de login após logout
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
